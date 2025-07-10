@@ -17,10 +17,7 @@ A smart, user-friendly restaurant chatbot built with **Node.js** and **MongoDB**
 
 ---
 
-## 🚀 Live Demo
-
-🔗 **[Demo Link](https://restaurant-bot-eiqq.onrender.com)**  
-📂 Deployed with Render 
+### 🚀 Demo Link: [https://restaurant-bot-eiqq.onrender.com](https://restaurant-bot-eiqq.onrender.com)
 
 ---
 
