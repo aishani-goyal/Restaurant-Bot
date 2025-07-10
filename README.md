@@ -19,13 +19,6 @@ A smart, user-friendly restaurant chatbot built with **Node.js** and **MongoDB**
 
 ---
 
-## 🚀 Live Demo
-
-🔗 **[Demo Link (Render/Localhost)](https://your-live-demo-url.com)**  
-📂 Deployed with Render (or specify if deployed elsewhere)
-
----
-
 ## ⚙️ Tech Stack
 
 | Layer           | Technology                 |
