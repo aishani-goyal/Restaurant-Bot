@@ -6,8 +6,6 @@ A smart, user-friendly restaurant chatbot built with **Node.js** and **MongoDB**
 
 ## 📸 Screenshots
 
-> Replace the image links below with your actual GitHub-hosted image URLs or local paths.
-
 <h3>🔐 Login Screen</h3>
 <img src="Images/login.png" alt="Login Screen" width="400">
 
