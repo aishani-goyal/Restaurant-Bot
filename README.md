@@ -9,13 +9,13 @@ A smart, user-friendly restaurant chatbot built with **Node.js** and **MongoDB**
 > Replace the image links below with your actual GitHub-hosted image URLs or local paths.
 
 ### 🔐 Login Screen
-![Login Screen](Images/Login Screen.png)
+![Login Screen](Images/login.png)
 
 ### 🧾 Sign Up Screen
-![Signup Screen](Images/Signup Screen.png)
+![Signup Screen](Images/signup.png)
 
 ### 💬 Bot Interface (After Login)
-![Chat UI](Images/Chat UI.png)
+![Chat UI](Images/chat.png)
 
 ---
 
