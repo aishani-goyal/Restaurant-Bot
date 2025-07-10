@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurant Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f3f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        #login-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #login-box input {
+            width: 400px;
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        #login-box button {
+            width: 130px;
+            padding: 7px;
+            margin: 5px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        #messages {
+            height: 350px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 6px;
+            background: #fafafa;
+            margin-bottom: 10px;
+        }
+
+        .msg {
+            margin-bottom: 10px;
+        }
+
+        .bot {
+            color: green;
+        }
+
+        .user {
+            text-align: right;
+            color: blue;
+        }
+
+        #input-area {
+            display: flex;
+        }
+
+        #user-input {
+            flex: 1;
+            margin-right: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #chat-section {
+            display: none;
+        }
+
+        #logout-btn {
+            margin: 20px auto 0 auto;   /* top margin + auto for horizontal centering */
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: block;             /* necessary for margin auto to center */
+            font-size: 15px;
+            border-radius: 4px;
+}
+
+
+        #login-status {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h2>Restaurant Bot 🍽️</h2>
+
+        <!-- Login Section -->
+        <div id="login-box">
+            <div id="name-field" style="display: none;">
+                <input type="text" id="name" placeholder="Name">
+            </div>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <button onclick="signup()" id="signup-btn">Sign Up</button>
+            <p id="login-status"></p>
+        </div>
+          
+          
+          
+
+        <!-- Chat Section -->
+        <div id="chat-section">
+            <div id="messages"></div>
+            <div id="input-area">
+                <input type="text" id="user-input" placeholder="Type your message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+            <button id="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById("messages");
+        const tokenKey = "restaurantBotToken";
+
+        function appendMessage(text, sender = "bot") {
+            const msg = document.createElement("div");
+            msg.classList.add("msg");
+            msg.classList.add(sender);
+            msg.innerText = text;
+            messagesDiv.appendChild(msg);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function login() {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            if (!email || !password) return alert("Please enter email and password");
+
+            try {
+                const res = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+                if (data.token) {
+                    localStorage.setItem(tokenKey, data.token);
+                    document.getElementById("login-box").style.display = "none";
+                    document.getElementById("chat-section").style.display = "block";
+                    document.getElementById("login-status").innerText = "";
+                } else {
+                    document.getElementById("login-status").innerText = data.error || "Login failed";
+                }
+            } catch (err) {
+                document.getElementById("login-status").innerText = "Login error";
+            }
+        }
+
+        let signupMode = false;
+
+        async function signup() {
+            const nameField = document.getElementById("name-field");
+            const loginBtn = document.querySelector("#login-box button:nth-child(4)");
+            const signupBtn = document.getElementById("signup-btn");
+
+            if (!signupMode) {
+                
+                signupMode = true;
+                nameField.style.display = "block";
+                loginBtn.style.display = "none";
+                signupBtn.innerText = "Submit Sign Up";
+                return;
+            }
+
+            
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            if (!name || !email || !password) {
+                alert("Please fill all fields");
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/auth/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, password }),
+                });
+
+                const data = await res.json();
+                if (data.message === "Signup successful") {
+                    alert("Signup successful! Now log in.");
+                    // Reset UI to login mode
+                    signupMode = false;
+                    nameField.style.display = "none";
+                    loginBtn.style.display = "block";
+                    signupBtn.innerText = "Sign Up";
+                    document.getElementById("login-status").innerText = "";
+                } else {
+                    document.getElementById("login-status").innerText = data.error || "Signup failed";
+                }
+            } catch (err) {
+                document.getElementById("login-status").innerText = "Signup error";
+            }
+        }
+
+
+
+        async function sendMessage() {
+            const text = document.getElementById("user-input").value.trim();
+            const token = localStorage.getItem(tokenKey);
+            if (!text || !token) return;
+
+            appendMessage("You: " + text, "user");
+            document.getElementById("user-input").value = "";
+
+            try {
+                const res = await fetch("/api/chatbot/message", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": token
+                    },
+                    body: JSON.stringify({ message: text })
+                });
+
+                const data = await res.json();
+                appendMessage("Bot: " + data.reply, "bot");
+            } catch (err) {
+                appendMessage("Bot: Sorry, there was an error.", "bot");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem(tokenKey);
+            document.getElementById("login-box").style.display = "flex";
+            document.getElementById("chat-section").style.display = "none";
+        }
+
+        window.onload = () => {
+            const token = localStorage.getItem(tokenKey);
+            if (token) {
+                document.getElementById("login-box").style.display = "none";
+                document.getElementById("chat-section").style.display = "block";
+            }
+        };
+    </script>
+</body>
+
+</html>
