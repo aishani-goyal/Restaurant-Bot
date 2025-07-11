@@ -29,7 +29,7 @@ A smart, user-friendly restaurant chatbot built with **Node.js** and **MongoDB**
 | Backend        | Node.js, Express.js        |
 | Database       | MongoDB (MongoDB Atlas)    |
 | Authentication | JWT (JSON Web Tokens)      |
-| Deployment     | Render (Free Node App)     |
+| Deployment     | Render                     |
 
 ---
 
